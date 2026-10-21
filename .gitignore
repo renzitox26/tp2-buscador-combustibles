@@ -1,0 +1,33 @@
+
+# Entornos virtuales de Python
+.venv/
+venv/
+env/
+
+# Archivos temporales y cache de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Variables de entorno y credenciales
+.env
+.env.*
+!.env.example
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos temporales de editores
+.vscode/
+.idea/
+
+# Resultados generados por el programa
+outputs/*
+!outputs/.gitkeep
+
+# Cache de pruebas
+.pytest_cache/
+.coverage
+htmlcov/
