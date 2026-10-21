@@ -1,0 +1,14 @@
+
+[
+  {
+    "empresa": "ESTACION EJEMPLO",
+    "direccion": "CALLE 123",
+    "localidad": "ROSARIO",
+    "provincia": "SANTA FE",
+    "producto": "Nafta (súper) entre 92 y 95 Ron",
+    "tipohorario": "Diurno",
+    "precio": "1350",
+    "fecha_vigencia": "15/08/2025 10:00",
+    "empresabandera": "YPF"
+  }
+]

@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from modelos import ConsultaPrecio
-from fuentes import FuenteCSV
+from fuentes import FuenteCSV, FuenteJSON
 from pipeline import buscar_precios_vigentes
 
 
@@ -95,7 +95,6 @@ def nombre_combustible(producto):
 
 
 def realizar_busqueda(fuente, localidades_por_provincia, productos):
-    # Elegir provincia
     provincias = sorted(localidades_por_provincia)
 
     indice = elegir_opcion(
@@ -104,11 +103,9 @@ def realizar_busqueda(fuente, localidades_por_provincia, productos):
     )
     provincia = provincias[indice]
 
-    # Buscar localidad
     localidades = localidades_por_provincia[provincia]
     localidad = buscar_localidad(localidades)
 
-    # Elegir combustible
     nombres_visibles = [
         nombre_combustible(producto)
         for producto in productos
@@ -120,7 +117,6 @@ def realizar_busqueda(fuente, localidades_por_provincia, productos):
     )
     producto = productos[indice]
 
-    # Elegir horario
     horarios = ["Diurno", "Nocturno"]
 
     indice = elegir_opcion(
@@ -129,7 +125,6 @@ def realizar_busqueda(fuente, localidades_por_provincia, productos):
     )
     horario = horarios[indice]
 
-    # Ingresar fecha
     while True:
         fecha = input(
             "\nIngresá la fecha (DD/MM/AAAA): "
@@ -193,22 +188,48 @@ def main():
     print("========================================")
 
     carpeta_proyecto = Path(__file__).resolve().parent.parent
-    ruta_csv = carpeta_proyecto / "data" / "combustibles_final.csv"
+    carpeta_datos = carpeta_proyecto / "data"
 
-    if not ruta_csv.exists():
-        print("ERROR: No se encontró el archivo de datos.")
+    opciones_fuente = [
+        "CSV - Dataset histórico completo",
+        "CSV - Muestra de 1000 registros",
+        "JSON - Datos de ejemplo"
+    ]
+
+    indice = elegir_opcion(
+        "SELECCIONAR FUENTE DE DATOS",
+        opciones_fuente
+    )
+
+    if indice == 0:
+        ruta = carpeta_datos / "combustibles_final.csv"
+        fuente = FuenteCSV(ruta)
+
+    elif indice == 1:
+        ruta = carpeta_datos / "combustibles_muestra.csv"
+        fuente = FuenteCSV(ruta)
+
+    else:
+        ruta = carpeta_datos / "combustibles_ejemplo.json"
+        fuente = FuenteJSON(ruta)
+
+    if not ruta.exists():
+        print(f"\nERROR: No se encontró el archivo {ruta.name}")
+        print("Probá con otra fuente de datos disponible.")
         return
 
-    fuente = FuenteCSV(ruta_csv)
-
     print("\nCargando datos...")
-    localidades_por_provincia, productos = obtener_opciones(fuente)
+
+    try:
+        localidades_por_provincia, productos = obtener_opciones(fuente)
+    except (OSError, ValueError) as error:
+        print(f"ERROR al leer los datos: {error}")
+        return
 
     if not localidades_por_provincia or not productos:
         print("ERROR: No hay opciones disponibles.")
         return
 
-    # Repetir las búsquedas hasta que el usuario decida salir
     while True:
         realizar_busqueda(
             fuente,
@@ -231,4 +252,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -32,5 +32,8 @@ outputs/*
 .coverage
 htmlcov/
 
-# Ignorar todos los datasets CSV de gran tamaño
+# Ignorar los datasets grandes
 data/*.csv
+
+# Permitir subir la muestra pequeña
+!data/combustibles_muestra.csv
