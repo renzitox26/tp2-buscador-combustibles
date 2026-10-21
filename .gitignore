@@ -31,3 +31,6 @@ outputs/*
 .pytest_cache/
 .coverage
 htmlcov/
+# Dataset original de gran tamaño
+data/*.csv
+!data/combustibles_limpio.csv
